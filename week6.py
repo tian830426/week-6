@@ -15,6 +15,7 @@ new = mysql.connector.connect(
   password="tian0426",
   database="signin" 
 )
+
 #mycursor = new.cursor()
 # mycursor.execute("create table message(content varchar(255))")
 # mycursor.execute("show tables")
@@ -40,8 +41,8 @@ def signup():
     #資料庫-撈取對應值後執行sql，並利用fetchall回傳值
     #execute()-執行  rowcount()-資料筆數 commit()-提交資料到資料庫
     mycursor = new.cursor()
-    sql='SELECT username, password FROM member WHERE username = %s' %(user)
-    mycursor.execute(sql)
+    sql='SELECT username, password FROM member WHERE username = %s'
+    mycursor.execute(sql % user)
     myresult = mycursor.fetchall() 
     # for x in myresult:     
     if (mycursor.rowcount != 0) :
@@ -50,7 +51,7 @@ def signup():
         mycursor = new.cursor()
         sql2='INSERT INTO member(name, username, password) VALUES(%s, %s, %s)'
         val=(name, user, psw)
-        mycursor.execute(sql2, val)
+        mycursor.execute(sql2 ,val)
         new.commit()
         return redirect('/')
 
@@ -65,9 +66,10 @@ def signin():
     session["password"]= psw
     #資料庫-取得name, username, password三項欄位，username, password與要求物件取得的值相同，代表輸入正確帳號密碼
     #執行並取出值
+    # %(user,psw)
     mycursor = new.cursor()
-    sql='SELECT name, username, password FROM member WHERE username = %s and password = %s' % (user,psw)
-    mycursor.execute(sql)
+    sql='SELECT name, username, password FROM member WHERE username = %s and password = %s' 
+    mycursor.execute(sql %(user,psw))
     myresult = mycursor.fetchall()
     # for x in myresult:
     # Tuple 去取值 myresult[0][0]=name /myresult[0][1]=user/ myresult[0][2]=psw
