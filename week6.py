@@ -41,8 +41,8 @@ def signup():
     #資料庫-撈取對應值後執行sql，並利用fetchall回傳值
     #execute()-執行  rowcount()-資料筆數 commit()-提交資料到資料庫
     mycursor = new.cursor()
-    sql='SELECT username, password FROM member WHERE username = %s'
-    mycursor.execute(sql % user)
+    sql='SELECT username, password FROM member WHERE username = %(user)s'
+    mycursor.execute(sql,{"user":user} )
     myresult = mycursor.fetchall() 
     # for x in myresult:     
     if (mycursor.rowcount != 0) :
@@ -51,7 +51,7 @@ def signup():
         mycursor = new.cursor()
         sql2='INSERT INTO member(name, username, password) VALUES(%s, %s, %s)'
         val=(name, user, psw)
-        mycursor.execute(sql2 ,val)
+        mycursor.execute(sql2,val)
         new.commit()
         return redirect('/')
 
@@ -69,7 +69,7 @@ def signin():
     # %(user,psw)
     mycursor = new.cursor()
     sql='SELECT name, username, password FROM member WHERE username = %s and password = %s' 
-    mycursor.execute(sql %(user,psw))
+    mycursor.execute(sql,(user,psw))
     myresult = mycursor.fetchall()
     # for x in myresult:
     # Tuple 去取值 myresult[0][0]=name /myresult[0][1]=user/ myresult[0][2]=psw
@@ -120,7 +120,7 @@ def signout():
 #     content = request.arg.get('content','')
 #     return render_template('member.html',name=name, content=content)
     
-    # session["message"]= text
+    # session["message"] = text
     # session["name"] = name
     # return render_template('member.html', (name,message)==(name,message))
 
